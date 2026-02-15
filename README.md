@@ -6,4 +6,19 @@ Nomad coder 의 '왕초보를 위한 React Native 101' 강의를 들으며 진�
 
 # `git clone` 이후 해야할 것
 
-- 터미널에 `npm install`
+## 내부 터미널
+
+- npm 설치
+  - `npm install`
+- expo 설치
+  - `npm install --global expo-cli`
+- 위치 확인 API
+  - `npx expo install expo-location`
+
+## 외부 터미널
+
+- watchman 설치
+  ```
+  brew update
+  brew install watchman
+  ```
