@@ -33,7 +33,7 @@ export default function App() {
       `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`,
     );
     const json = await response.json();
-    console.log(json | jq);
+    console.log(JSON.stringify(json, null, 2));
   };
   useEffect(() => {
     getWeather();
