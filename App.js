@@ -1,5 +1,12 @@
-import React, { use, useEffect, useState } from "react";
-import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+  ActivityIndicator,
+} from "react-native";
 import * as Location from "expo-location"; //위치 API
 
 const apiKey = process.env.EXPO_PUBLIC_API_KEY;
@@ -33,8 +40,15 @@ export default function App() {
       `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`,
     );
     const json = await response.json();
-    console.log(JSON.stringify(json, null, 2));
+    setDays(
+      json.list.filter((weather) => {
+        if (weather.dt_txt.includes("03:00:00")) {
+          return weather;
+        }
+      }),
+    );
   };
+
   useEffect(() => {
     getWeather();
   }, []);
@@ -51,22 +65,25 @@ export default function App() {
         // indicatorStyle="black"
         contentContainerStyle={styles.weather}
       >
-        <View style={styles.day}>
-          <Text style={styles.temperture}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
-        <View style={styles.day}>
-          <Text style={styles.temperture}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
-        <View style={styles.day}>
-          <Text style={styles.temperture}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
-        <View style={styles.day}>
-          <Text style={styles.temperture}>27</Text>
-          <Text style={styles.description}>Sunny</Text>
-        </View>
+        {days.length == 0 ? (
+          <View style={styles.day}>
+            <ActivityIndicator
+              color="black"
+              size="large"
+              style={{ marginTop: 10 }}
+            />
+          </View>
+        ) : (
+          days.map((day, index) => (
+            <View key={index} style={styles.day}>
+              <Text style={styles.temperture}>
+                {parseFloat(day.main.temp).toFixed(1)}
+              </Text>
+              <Text style={styles.description}>{day.weather[0].main}</Text>
+              <Text style={styles.tinyText}>{day.weather[0].description}</Text>
+            </View>
+          ))
+        )}
       </ScrollView>
     </View>
   );
@@ -98,5 +115,8 @@ const styles = StyleSheet.create({
   description: {
     marginTop: -30,
     fontSize: 60,
+  },
+  tinyText: {
+    fontSize: 20,
   },
 });
