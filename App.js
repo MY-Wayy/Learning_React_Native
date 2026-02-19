@@ -7,11 +7,18 @@ import {
   Dimensions,
   ActivityIndicator,
 } from "react-native";
-import * as Location from "expo-location"; //위치 API
+import * as Location from "expo-location"; // 위치 API
+import Fontisto from "@expo/vector-icons/Fontisto"; // for 날씨 아이콘
 
+//API KEY
 const apiKey = process.env.EXPO_PUBLIC_API_KEY;
-
+//Dimentions : 앱 실행한 기기 크기 불러오기
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
+
+//days의 날씨정보와 Fontisto 의 아이콘 이름 연결을 위한 오브젝트
+const icons = {
+  Clouds: "cloudy",
+};
 
 export default function App() {
   // 날씨 앱 만들기 (Nomad Coder's React Native)
@@ -77,9 +84,24 @@ export default function App() {
         ) : (
           days.map((day, index) => (
             <View key={index} style={styles.day}>
-              <Text style={styles.temperture}>
-                {parseFloat(day.main.temp).toFixed(1)}
-              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "flex-end",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                <Text style={styles.temperture}>
+                  {parseFloat(day.main.temp).toFixed(1)}
+                </Text>
+                <Fontisto
+                  name={icons[day.weather[0].main]}
+                  size={68}
+                  color="black"
+                />
+              </View>
+
               <Text style={styles.description}>{day.weather[0].main}</Text>
               <Text style={styles.tinyText}>{day.weather[0].description}</Text>
             </View>
@@ -106,16 +128,17 @@ const styles = StyleSheet.create({
   },
   weather: {},
   day: {
+    padding: 20,
     width: SCREEN_WIDTH,
-    alignItems: "center",
   },
   temperture: {
     marginTop: 50,
-    fontSize: 168,
+    fontSize: 120,
+    fontWeight: 500,
   },
   description: {
-    marginTop: -30,
-    fontSize: 60,
+    marginTop: -20,
+    fontSize: 40,
   },
   tinyText: {
     fontSize: 20,
