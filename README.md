@@ -10,10 +10,9 @@ Nomad coder 의 '왕초보를 위한 React Native 101' 강의를 들으며 진�
 
 - npm 설치
   - `npm install`
-- expo 설치
-  - `npm install --global expo-cli`
 - 위치 확인 API
   - `npx expo install expo-location`
+- `npm install --global @expo/ngrok@^4.1.0`
 
 ## 외부 터미널
 
@@ -22,3 +21,12 @@ Nomad coder 의 '왕초보를 위한 React Native 101' 강의를 들으며 진�
   brew update
   brew install watchman
   ```
+- expo 설치
+  - `npm install --global expo-cli`
+
+## API KEY
+`.env` 파일로 openWeather API KEY 필요 (무료)
+```
+EXPO_PUBLIC_API_KEY="[API KEY]"
+```
+형식으로 만들 것
