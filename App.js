@@ -17,7 +17,13 @@ const { width: SCREEN_WIDTH } = Dimensions.get("window");
 
 //days의 날씨정보와 Fontisto 의 아이콘 이름 연결을 위한 오브젝트
 const icons = {
+  Thunderstorm: "lightning",
+  Drizzle: "rain",
+  Rain: "rains",
+  Snow: "snow",
+  Atmosphere: "cloudy-gusts",
   Clouds: "cloudy",
+  Clear: "day-sunny",
 };
 
 export default function App() {
@@ -62,7 +68,7 @@ export default function App() {
   }, []);
 
   return (
-    <View style={styles.container}>
+    <View style={{ ...styles.container, alignItems: "center" }}>
       <View style={styles.city}>
         <Text style={styles.cityName}>{city}</Text>
       </View>
@@ -99,6 +105,7 @@ export default function App() {
                   name={icons[day.weather[0].main]}
                   size={68}
                   color="black"
+                  style={{ paddingBottom: 2 }}
                 />
               </View>
 
@@ -130,6 +137,7 @@ const styles = StyleSheet.create({
   day: {
     padding: 20,
     width: SCREEN_WIDTH,
+    position: "relative",
   },
   temperture: {
     marginTop: 50,
