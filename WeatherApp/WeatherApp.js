@@ -26,7 +26,7 @@ const icons = {
   Clear: "day-sunny",
 };
 
-export default function App() {
+export default function WeatherApp() {
   // 날씨 앱 만들기 (Nomad Coder's React Native)
   const [city, setCity] = useState("Loading...");
   const [days, setDays] = useState([]);
