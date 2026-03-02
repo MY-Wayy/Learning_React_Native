@@ -5,27 +5,43 @@ import {
   View,
   TouchableOpacity,
   TouchableHighlight,
-  TouchableWithoutFeedback,
-  Pressable,
+  TextInput,
 } from "react-native";
 import { theme } from "./colors";
+import { useState } from "react";
 
 export default function TodoApp() {
+  const [working, setWorking] = useState(true);
+  const [text, setText] = useState("");
+  const travel = () => setWorking(false);
+  const work = () => setWorking(true);
+  const onChangeText = (payload) => setText(payload);
+
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
       <View style={styles.header}>
-        <TouchableOpacity>
-          <Text style={styles.btnText}>Work</Text>
+        <TouchableOpacity onPress={work}>
+          <Text
+            style={{ ...styles.btnText, color: working ? "white" : theme.grey }}
+          >
+            Work
+          </Text>
         </TouchableOpacity>
-        <TouchableHighlight
-          underlayColor="red"
-          activeOpacity={0.5}
-          onPress={() => console.log("pressed")}
-        >
-          <Text style={styles.btnText}>Travel</Text>
+        <TouchableHighlight onPress={travel}>
+          <Text
+            style={{ ...styles.btnText, color: working ? theme.grey : "white" }}
+          >
+            Travel
+          </Text>
         </TouchableHighlight>
       </View>
+      <TextInput
+        value={text}
+        onChangeText={onChangeText}
+        placeholder={working ? "Add a To do" : "Where do you want to go?"}
+        style={styles.input}
+      />
     </View>
   );
 }
@@ -44,6 +60,13 @@ const styles = StyleSheet.create({
   btnText: {
     fontSize: 38,
     fontWeight: 600,
-    color: "white",
+  },
+  input: {
+    backgroundColor: "white",
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 30,
+    marginTop: 20,
+    fontSize: 18,
   },
 });
