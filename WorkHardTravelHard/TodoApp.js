@@ -18,10 +18,13 @@ export default function TodoApp() {
   const travel = () => setWorking(false);
   const work = () => setWorking(true);
   const onChangeText = (payload) => setText(payload);
+  //입력태그에서 입력한 내용 toDos 오브젝트에 추가하는 함수
   const addToDo = () => {
+    //빈 내용이면 아무것도 안 함
     if (text === "") {
       return;
     }
+    //내용 있으면 toDos에 항목 추가
     const newToDos = Object.assign({}, toDos, {
       [Date.now()]: { text, work: working },
     });
