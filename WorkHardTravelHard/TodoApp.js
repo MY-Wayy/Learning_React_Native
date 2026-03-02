@@ -13,10 +13,23 @@ import { useState } from "react";
 export default function TodoApp() {
   const [working, setWorking] = useState(true);
   const [text, setText] = useState("");
+  const [toDos, setToDos] = useState({});
+
   const travel = () => setWorking(false);
   const work = () => setWorking(true);
   const onChangeText = (payload) => setText(payload);
+  const addToDo = () => {
+    if (text === "") {
+      return;
+    }
+    const newToDos = Object.assign({}, toDos, {
+      [Date.now()]: { text, work: working },
+    });
+    setToDos(newToDos);
+    setText("");
+  };
 
+  console.log(toDos);
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -37,8 +50,10 @@ export default function TodoApp() {
         </TouchableHighlight>
       </View>
       <TextInput
+        onSubmitEditing={addToDo}
         value={text}
         onChangeText={onChangeText}
+        returnKeyType="done"
         placeholder={working ? "Add a To do" : "Where do you want to go?"}
         style={styles.input}
       />
