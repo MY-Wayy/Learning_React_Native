@@ -7,7 +7,9 @@ import {
   TouchableHighlight,
   TextInput,
   ScrollView,
+  Alert,
 } from "react-native";
+import Fontisto from "@expo/vector-icons/Fontisto";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useEffect, useState } from "react";
 import { theme } from "./colors";
@@ -45,7 +47,6 @@ export default function TodoApp() {
 
   //입력태그에서 입력한 내용 toDos 오브젝트에 추가하는 함수
   const addToDo = async () => {
-    //빈 내용이면 아무것도 안 함
     if (text === "") {
       return;
     }
@@ -53,11 +54,30 @@ export default function TodoApp() {
     const newToDos = Object.assign({}, toDos, {
       [Date.now()]: { text, working },
     });
-    // toDos에 항목 추가 두번째 방법
-    // const newToDos = { ...toDos, [Date.now()]: { text, work: working } };
+    /* toDos에 항목 추가 두번째 방법
+    const newToDos = { ...toDos, [Date.now()]: { text, work: working } }; 
+    */
     setToDos(newToDos);
     await saveToDos(newToDos);
     setText("");
+  };
+
+  //Todo 요소 삭제하는 함수
+  const deleteToDo = (key) => {
+    Alert.alert("Delete To Do", "Are you sure?", [
+      { text: "Cancel" },
+      {
+        text: "I'm Sure",
+        style: "destructive",
+        onPress: async () => {
+          const newToDos = { ...toDos };
+          delete newToDos[key];
+          setToDos(newToDos);
+          saveToDos(newToDos);
+        },
+      },
+    ]);
+    return;
   };
 
   return (
@@ -93,6 +113,9 @@ export default function TodoApp() {
               toDos[key].working === working ? (
                 <View style={styles.toDo} key={key}>
                   <Text style={styles.toDoText}>{toDos[key].text}</Text>
+                  <TouchableOpacity onPress={() => deleteToDo(key)}>
+                    <Fontisto name="trash" size={18} color={theme.grey} />
+                  </TouchableOpacity>
                 </View>
               ) : null,
             )
@@ -126,11 +149,14 @@ const styles = StyleSheet.create({
     fontSize: 18,
   },
   toDo: {
-    backgroundColor: theme.grey,
+    backgroundColor: "#191919",
     marginBottom: 10,
     paddingVertical: 20,
     paddingHorizontal: 20,
     borderRadius: 15,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   toDoText: {
     color: "white",
