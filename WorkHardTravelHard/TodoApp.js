@@ -8,8 +8,11 @@ import {
   TextInput,
   ScrollView,
 } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect, useState } from "react";
 import { theme } from "./colors";
-import { useState } from "react";
+
+const STORAGE_KEY = "@toDos";
 
 export default function TodoApp() {
   const [working, setWorking] = useState(true);
@@ -19,23 +22,44 @@ export default function TodoApp() {
   const travel = () => setWorking(false);
   const work = () => setWorking(true);
   const onChangeText = (payload) => setText(payload);
+
+  //AsyncStorage를 활용해 저장소에 TODO 저장
+  const saveToDos = async (toSave) => {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(toSave));
+    } catch (e) {
+      console.error("데이터 저장 실패", e);
+    }
+  };
+  const loadToDos = async () => {
+    try {
+      const s = await AsyncStorage.getItem(STORAGE_KEY);
+      setToDos(JSON.parse(s));
+    } catch (e) {
+      console.error("데이터 불러오기 실패", e);
+    }
+  };
+  useEffect(() => {
+    loadToDos();
+  }, []);
+
   //입력태그에서 입력한 내용 toDos 오브젝트에 추가하는 함수
-  const addToDo = () => {
+  const addToDo = async () => {
     //빈 내용이면 아무것도 안 함
     if (text === "") {
       return;
     }
     //내용 있으면 toDos에 항목 추가
     const newToDos = Object.assign({}, toDos, {
-      [Date.now()]: { text, work: working },
+      [Date.now()]: { text, working },
     });
     // toDos에 항목 추가 두번째 방법
     // const newToDos = { ...toDos, [Date.now()]: { text, work: working } };
     setToDos(newToDos);
+    await saveToDos(newToDos);
     setText("");
   };
 
-  console.log(toDos);
   return (
     <View style={styles.container}>
       <StatusBar style="light" />
@@ -64,11 +88,15 @@ export default function TodoApp() {
         style={styles.input}
       />
       <ScrollView>
-        {Object.keys(toDos).map((key) => (
-          <View style={styles.toDo} key={key}>
-            <Text style={styles.toDoText}>{toDos[key].text}</Text>
-          </View>
-        ))}
+        {toDos
+          ? Object.keys(toDos).map((key) =>
+              toDos[key].working === working ? (
+                <View style={styles.toDo} key={key}>
+                  <Text style={styles.toDoText}>{toDos[key].text}</Text>
+                </View>
+              ) : null,
+            )
+          : null}
       </ScrollView>
     </View>
   );
